@@ -2584,10 +2584,15 @@ fn with_test_item_names(tcx: TyCtxt<'_>, module: LocalModDefId, f: impl Fn(&[Sym
     }
 }
 
+pub enum TestFunctionScope {
+    All,
+    Specific(test::test::TestType),
+}
+
 /// Checks if the function containing the given `HirId` is a `#[test]` function
 ///
 /// Note: Add `//@compile-flags: --test` to UI tests with a `#[test]` function
-pub fn is_in_test_function(tcx: TyCtxt<'_>, id: HirId) -> bool {
+pub fn is_in_test_function(tcx: TyCtxt<'_>, id: HirId, scope: TestFunctionScope) -> bool {
     with_test_item_names(tcx, tcx.parent_module(id), |names| {
         let node = tcx.hir_node(id);
         once((id, node))

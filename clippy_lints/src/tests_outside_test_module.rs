@@ -62,7 +62,7 @@ impl LateLintPass<'_> for TestsOutsideTestModule {
     ) {
         if !matches!(kind, FnKind::Closure)
             && is_in_test_function(cx.tcx, body.id().hir_id)
-            && !is_integration_test(cx.tcx.sess.source_map(), sp)
+            // && !is_integration_test(cx.tcx.sess.source_map(), sp)
             && !is_in_cfg_test(cx.tcx, body.id().hir_id)
         {
             #[expect(clippy::collapsible_span_lint_calls, reason = "rust-clippy#7797")]
@@ -79,11 +79,11 @@ impl LateLintPass<'_> for TestsOutsideTestModule {
     }
 }
 
-fn is_integration_test(sm: &SourceMap, sp: Span) -> bool {
-    match sm.span_to_filename(sp) {
-        FileName::Real(RealFileName::LocalPath(name)) => {
-            name.components().next() == Some(Component::Normal("tests".as_ref()))
-        },
-        _ => false,
-    }
-}
+// fn is_integration_test(sm: &SourceMap, sp: Span) -> bool {
+//     match sm.span_to_filename(sp) {
+//         FileName::Real(RealFileName::LocalPath(name)) => {
+//             name.components().next() == Some(Component::Normal("tests".as_ref()))
+//         },
+//         _ => false,
+//     }
+// }
